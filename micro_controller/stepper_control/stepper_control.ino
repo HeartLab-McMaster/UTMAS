@@ -16,10 +16,13 @@
 #define motor_pulse_6 48
 #define motor_dir_6 49
 
+// #include <AccelStepper.h>
 
+char buf[2];
 
 int targetPosition = 0;
 int selected_motor = 1;
+// AccelStepper stepper(AccelStepper::DRIVER, motor_pulse_1, motor_dir_1);
 
 void setup() {
   pinMode(motor_pulse_1, OUTPUT);
@@ -39,7 +42,8 @@ void setup() {
   
   pinMode(motor_pulse_6, OUTPUT);
   pinMode(motor_dir_6, OUTPUT);
-
+  
+  // stepper.setMaxSpeed(100);
   Serial.begin(9600);
 }
 
@@ -58,16 +62,20 @@ void loop() {
 
   if (Serial.available() > 0) {
     // Read the input as a string
-    String input = Serial.readStringUntil('\n');
-    input.trim();  // Remove any whitespace or newline characters
+    int res = Serial.readBytes(buf, 2);
+    // String input = Serial.readStringUntil('\n');
+    // input.trim();  // Remove any whitespace or newline characters
 
-    selected_motor = input.toInt();
-    Serial.println(selected_motor);
+    // selected_motor = input.toInt();
+    // Serial.println(selected_motor);
+
+    selected_motor = buf[0];
 
     // Wait for target position input
-    while (!Serial.available()) {}
-    input = Serial.readStringUntil('\n');
-    targetPosition = input.toInt();
+    // while (!Serial.available()) {}
+    // input = Serial.readStringUntil('\n');
+    // targetPosition = input.toInt();
+    targetPosition = buf[1];
 
     switch (selected_motor) {
       case 1:
